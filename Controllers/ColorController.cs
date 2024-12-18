@@ -20,8 +20,10 @@ namespace api.Controllers
 
             var colors = await colorRepo.GetAllAsync();
 
-            return Ok(colors?.Select(c => c.ToColorDto()) ?? []);
+            // return Ok(colors?.Select(c => c.ToColorDto()) ?? []);
+            return Ok(colors);
         }
+        
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
