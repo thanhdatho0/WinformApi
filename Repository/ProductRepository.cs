@@ -97,6 +97,16 @@ public class ProductRepository(ApplicationDbContext context) : IProductRepositor
             .ToListAsync();
     }
 
+    public async Task<List<ProductInfoDto>> GetAllProductInfo()
+    {
+        var products = await context.Products
+            .AsNoTracking()
+            .Include(p => p.Images)
+            .Select(p => p.ToProductInfoDto())
+            .ToListAsync();
+        return products;
+    }
+
     public async Task<Product?> GetByIdAsync(int id)
     {
         return await context.Products

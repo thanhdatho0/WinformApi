@@ -34,6 +34,16 @@ namespace api.Controllers
             return Ok(productsDto);
         }
 
+        [HttpGet("/product-info")]
+        public async Task<IActionResult> GetProductInfo()
+        {
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            var products = await productRepo.GetAllProductInfo();
+            
+            return Ok(products ?? []);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
