@@ -18,11 +18,11 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var genders = await targetCustomerRepo.GetAllAsync(query);
+            var targets = await targetCustomerRepo.GetAllAsync(query);
 
-            var genderDto = genders.Select(g => g.ToTargetCustomerDto());
+            var targerDto = targets.Select(g => g.ToTargetCustomerDto());
 
-            return Ok(genderDto);
+            return Ok(targerDto);
         }
 
         [HttpGet("{id:int}")]
@@ -31,28 +31,28 @@ namespace api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var gender = await targetCustomerRepo.GetByIdAsync(id);
+            var target = await targetCustomerRepo.GetByIdAsync(id);
 
-            if (gender == null)
+            if (target == null)
                 return NotFound();
 
-            return Ok(gender.ToTargetCustomerDto());
+            return Ok(target.ToTargetCustomerDto());
         }
 
         [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create([FromBody] TargetCustomerCreateDto genderDto)
+        public async Task<IActionResult> Create([FromBody] TargetCustomerCreateDto targetCustomerDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (await targetCustomerRepo.TargetCustomerNameExists(genderDto.TargetCustomerName))
+            if (await targetCustomerRepo.TargetCustomerNameExists(targetCustomerDto.TargetCustomerName))
                 return BadRequest("Target customer name already exists");
 
-            var gender = genderDto.ToTargetCustomerFromCreateDto();
-            await targetCustomerRepo.CreateAsync(gender);
+            var targetCustomer = targetCustomerDto.ToTargetCustomerFromCreateDto();
+            await targetCustomerRepo.CreateAsync(targetCustomer);
 
-            return CreatedAtAction(nameof(GetById), new { id = gender.TargetCustomerId }, gender.ToTargetCustomerDto());
+            return CreatedAtAction(nameof(GetById), new { id = targetCustomer.TargetCustomerId }, targetCustomer.ToTargetCustomerDto());
         }
 
         [HttpPut]
@@ -62,6 +62,9 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (await targetCustomerRepo.TargetCustomerNameExists(targetCustomerUpdateDto.TargetCustomerName))
+                return BadRequest("Target customer name already exists");
 
             var targetCustomer = await targetCustomerRepo.UpdateAsync(id, targetCustomerUpdateDto);
 

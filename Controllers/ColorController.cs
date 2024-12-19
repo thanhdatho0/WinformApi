@@ -23,7 +23,7 @@ namespace api.Controllers
             // return Ok(colors?.Select(c => c.ToColorDto()) ?? []);
             return Ok(colors);
         }
-        
+
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
@@ -40,8 +40,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
-            if(await colorRepo.ColorNameExists(colorCreateDto.HexaCode, colorCreateDto.Name))
+
+            if (await colorRepo.ColorNameExists(colorCreateDto.HexaCode, colorCreateDto.Name))
                 return BadRequest("Color already exists");
 
             var color = colorCreateDto.ToColorFromCreateDto();
@@ -63,6 +63,11 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (await colorRepo.ColorNameExists(colorUpdateDto.HexaCode, colorUpdateDto.Name))
+                return BadRequest("Color already exists");
+
+
             var color = await colorRepo.UpdateAsync(id, colorUpdateDto);
             return color != null ? Ok(color.ToColorDto()) : NotFound("Color does not found");
         }

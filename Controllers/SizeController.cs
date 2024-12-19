@@ -42,8 +42,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
-            if(await sizeRepo.SizeNameExists(sizeCreateDto.SizeValue))
+
+            if (await sizeRepo.SizeNameExists(sizeCreateDto.SizeValue))
                 return BadRequest("Size already exists");
 
             var size = sizeCreateDto.ToSizeFromCreateDto();
@@ -60,6 +60,9 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (await sizeRepo.SizeNameExists(sizeDto.SizeValue))
+                return BadRequest("Size already exists");
 
             var size = await sizeRepo.UpdateAsync(id, sizeDto);
 

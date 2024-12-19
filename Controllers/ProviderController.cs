@@ -45,8 +45,8 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
-            
-            if(await providerRepo.ProviderNameExists(providerDto.ProviderCompanyName))
+
+            if (await providerRepo.ProviderNameExists(providerDto.ProviderCompanyName))
                 return BadRequest("Provider already exists");
 
             var provider = providerDto.ToProviderFromCreateDto();
@@ -63,6 +63,10 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (await providerRepo.ProviderNameExists(providerDto.ProviderCompanyName))
+                return BadRequest("Provider already exists");
+
 
             var provider = await providerRepo.UpdateAsync(id, providerDto);
 
