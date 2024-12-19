@@ -1,14 +1,18 @@
 using api.DTOs.Employee;
 using api.Interfaces;
 using api.Mappers;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class EmployeeController(IEmployeeRepository employeeRepository) : ControllerBase
+public class EmployeeController(IEmployeeRepository employeeRepository, 
+    ITokenService tokenService, 
+    UserManager<AppUser> userManager) : ControllerBase
 {
     [HttpGet]
     [Authorize(Roles = "Admin")]
@@ -18,6 +22,19 @@ public class EmployeeController(IEmployeeRepository employeeRepository) : Contro
             return BadRequest(ModelState);
         var employees = await employeeRepository.GetAllAsync();
         return Ok(employees.Select(x => x.ToEmployeeDto()));
+    }
+
+    [HttpGet("details")]
+    [Authorize(Roles = "Employee")]
+    public async Task<IActionResult> GetDetails()
+    {
+        var accessToken = HttpContext.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
+        var principal = tokenService.GetPrincipalFromExpiredToken(accessToken);
+        var user = await userManager.FindByNameAsync(principal.Identity!.Name!);
+        if(user == null) return Unauthorized();
+        var employee = await employeeRepository.GetByCodeAsync(user.Id);
+        if (employee == null) return NotFound();
+        return Ok(employee.ToEmployeeDto());
     }
 
     [HttpGet("{id:int}")]

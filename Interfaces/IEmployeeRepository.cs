@@ -8,6 +8,7 @@ public interface IEmployeeRepository
     Task<List<Employee>> GetAllAsync();
     Task<Employee?> GetByIdAsync(int id);
     Task<Employee?> CreateAsync(Employee employee);
+    Task<Employee?> GetByCodeAsync(string id);
     //Task<Employee?> UpdateAsync(int id, EmployeeUpdateDto employeeUpdateDto);
     // Task<Employee?> DeleteAsync(int id);
 }
