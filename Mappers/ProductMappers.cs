@@ -14,7 +14,6 @@ public static class ProductMappers
         {
             ProductId = productModel.ProductId,
             Name = productModel.Name,
-            SubcategoryName = productModel.Subcategory?.SubcategoryName,
             Description = productModel.Description,
             Cost = productModel.Cost,
             Price = productModel.Price,
@@ -81,15 +80,4 @@ public static class ProductMappers
         product.InStock += productDto.InStock;
     }
 
-    public static ProductInfoDto ToProductInfoDto(this Product product)
-    {
-        return new ProductInfoDto
-        {
-            ProductId = product.ProductId,
-            Name = product.Name,
-            Price = product.Price,
-            FirstPicture = product.Images.First().Url,
-            Alt = product.Images.First().Alt,
-        };
-    }
 }

@@ -97,27 +97,18 @@ public class ProductRepository(ApplicationDbContext context) : IProductRepositor
             .ToListAsync();
     }
 
-    public async Task<List<ProductInfoDto>> GetAllProductInfo()
+    public async Task<ProductDto?> GetByIdAsync(int id)
     {
-        var products = await context.Products
+        var product = await context.Products
             .AsNoTracking()
-            .Include(p => p.Images)
-            .Select(p => p.ToProductInfoDto())
-            .ToListAsync();
-        return products;
-    }
-
-    public async Task<Product?> GetByIdAsync(int id)
-    {
-        return await context.Products
-            .AsNoTracking()
-            .Include(p => p.Subcategory)
             .Include(p => p.Inventories)
-                .ThenInclude(pz => pz.Size)
+            .ThenInclude(pz => pz.Size)
             .Include(p => p.Inventories)
-                .ThenInclude(pc => pc.Color)
-                .ThenInclude(c => c!.Images)
+            .ThenInclude(pc => pc.Color)
+            .ThenInclude(c => c!.Images)
+            // .Include(p => p.Images)
             .FirstOrDefaultAsync(p => p.ProductId == id);
+        return product?.ToProductDto();
     }
 
     public async Task<Product> CreateAsync(Product productModel)

@@ -36,21 +36,40 @@ namespace api.Controllers
             return Ok(image?.ToImageDto());
         }
 
+        // [HttpPost]
+        // [Authorize(Roles = "Admin")]
+        // public async Task<IActionResult> Create(IFormFile file, [FromForm] ImageCreateDto imageDto)
+        // {
+        //     if (!ModelState.IsValid)
+        //         return BadRequest(ModelState);
+        //
+        //     try
+        //     {
+        //         // Construct base URL in the controller
+        //         var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        //
+        //         var imageDtoResult = await imageService.CreateProductImagesAsync(file, imageDto, baseUrl);
+        //
+        //         return CreatedAtAction(nameof(GetById), new { id = imageDtoResult.ImageId }, imageDtoResult);
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         return StatusCode(500, $"An error occurred: {ex.Message}");
+        //     }
+        // }
+        
         [HttpPost]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(IFormFile file, [FromForm] ImageCreateDto imageDto)
+        public async Task<IActionResult> Create([FromBody] ImageCreateDto imageDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
-                // Construct base URL in the controller
-                var baseUrl = $"{Request.Scheme}://{Request.Host}";
+                var imageModel = imageDto.ToImageFromCreateDto();
+                var imageDtoResult = await imageRepo.CreateAsync(imageModel);
 
-                var imageDtoResult = await imageService.CreateProductImagesAsync(file, imageDto, baseUrl);
-
-                return CreatedAtAction(nameof(GetById), new { id = imageDtoResult.ImageId }, imageDtoResult);
+                return CreatedAtAction(nameof(GetById), new { id = imageDtoResult?.ImageId }, imageDtoResult);
             }
             catch (Exception ex)
             {
