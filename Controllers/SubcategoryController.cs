@@ -13,7 +13,6 @@ namespace api.Controllers
         : ControllerBase
     {
         [HttpGet]
-        // [Authorize]
         public async Task<IActionResult> GetAll([FromQuery] QueryOject query)
         {
             if (!ModelState.IsValid)
@@ -72,6 +71,11 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var subcategoryNameExistsTask = await subcategoryRepo.SubcategoryName(subcategoryDto.SubcategoryName);
+
+            if (subcategoryNameExistsTask)
+                return BadRequest("Subcategory name has already been taken!");
 
             var subcategory = await subcategoryRepo.UpdateAsync(id, subcategoryDto);
 
