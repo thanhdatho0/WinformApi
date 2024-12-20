@@ -34,8 +34,8 @@ public static class OrderMappers
     {
         return new Order
         {
-            EmployeeId = orderCreateDto?.EmployeeId,
-            CustomerId = orderCreateDto!.CustomerId,
+            EmployeeId = orderCreateDto.EmployeeId,
+            CustomerId = orderCreateDto.CustomerId,
             OrderNotice = orderCreateDto.OrderNotice,
         };
     }
