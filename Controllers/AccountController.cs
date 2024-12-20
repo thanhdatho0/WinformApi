@@ -171,7 +171,7 @@ public class AccountController(
                 return BadRequest($"Failed to create user: {userErrors}");
             }
 
-            // Assign the user to the "Admin" role
+            // Assign the user to the "Employee" role
             var roleAssignment = await userManager.AddToRoleAsync(appUser, "Employee");
             if (!roleAssignment.Succeeded)
             {
@@ -187,8 +187,8 @@ public class AccountController(
             }
 
             var employeeModel = employeeRegisterDto.EmployeeInfo.ToCreateEmployeeDto();
-            employeeModel.Enail = employeeRegisterDto.Email;
             employeeModel.EmployeeCode = appUser.Id;
+            employeeModel.Avatar = $"{Request.Scheme}://{Request.Host}/images/customer-avatar.png";
             await employeeRepository.CreateAsync(employeeModel);
 
             return Ok("Employee Created Successfully");
