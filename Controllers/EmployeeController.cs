@@ -47,4 +47,13 @@ public class EmployeeController(IEmployeeRepository employeeRepository,
         if (employee == null) return NotFound();
         return Ok(employee.ToEmployeeDto());
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, IFormFile? file, EmployeeUpdateDto employeeUpdateDto)
+    {
+        if(!ModelState.IsValid) return BadRequest(ModelState);
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var employee = await employeeRepository.UpdateAsync(id, baseUrl, file, employeeUpdateDto); 
+        return employee != null ? Ok(employee.ToEmployeeDto()) : NotFound();
+    }
 }
