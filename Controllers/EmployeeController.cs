@@ -10,8 +10,8 @@ namespace api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class EmployeeController(IEmployeeRepository employeeRepository, 
-    ITokenService tokenService, 
+public class EmployeeController(IEmployeeRepository employeeRepository,
+    ITokenService tokenService,
     UserManager<AppUser> userManager) : ControllerBase
 {
     [HttpGet]
@@ -31,7 +31,7 @@ public class EmployeeController(IEmployeeRepository employeeRepository,
         var accessToken = HttpContext.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
         var principal = tokenService.GetPrincipalFromExpiredToken(accessToken);
         var user = await userManager.FindByNameAsync(principal.Identity!.Name!);
-        if(user == null) return Unauthorized();
+        if (user == null) return Unauthorized();
         var employee = await employeeRepository.GetByCodeAsync(user.Id);
         if (employee == null) return NotFound();
         return Ok(employee.ToEmployeeDto());
@@ -49,11 +49,11 @@ public class EmployeeController(IEmployeeRepository employeeRepository,
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> Update(int id, IFormFile? file, EmployeeUpdateDto employeeUpdateDto)
+    public async Task<IActionResult> Update(int id, IFormFile? file, [FromForm] EmployeeUpdateDto employeeUpdateDto)
     {
-        if(!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
         var baseUrl = $"{Request.Scheme}://{Request.Host}";
-        var employee = await employeeRepository.UpdateAsync(id, baseUrl, file, employeeUpdateDto); 
+        var employee = await employeeRepository.UpdateAsync(id, baseUrl, file, employeeUpdateDto);
         return employee != null ? Ok(employee.ToEmployeeDto()) : NotFound();
     }
 }
