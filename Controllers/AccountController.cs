@@ -187,6 +187,7 @@ public class AccountController(
             }
 
             var employeeModel = employeeRegisterDto.EmployeeInfo.ToCreateEmployeeDto();
+            employeeModel.Enail = employeeRegisterDto.Email;
             employeeModel.EmployeeCode = appUser.Id;
             await employeeRepository.CreateAsync(employeeModel);
 

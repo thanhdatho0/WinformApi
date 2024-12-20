@@ -9,6 +9,6 @@ public interface IEmployeeRepository
     Task<Employee?> GetByIdAsync(int id);
     Task<Employee?> CreateAsync(Employee employee);
     Task<Employee?> GetByCodeAsync(string id);
-    //Task<Employee?> UpdateAsync(int id, EmployeeUpdateDto employeeUpdateDto);
+    Task<Employee?> UpdateAsync(int id, string baseUrl, IFormFile? file, EmployeeUpdateDto employeeUpdateDto);
     // Task<Employee?> DeleteAsync(int id);
 }

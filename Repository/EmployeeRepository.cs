@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Repository;
 
-public class EmployeeRepository(ApplicationDbContext context) : IEmployeeRepository
+public class EmployeeRepository(ApplicationDbContext context, IImageService imageService) : IEmployeeRepository
 {
     public async Task<List<Employee>> GetAllAsync()
     {
@@ -32,17 +32,21 @@ public class EmployeeRepository(ApplicationDbContext context) : IEmployeeReposit
         return employee ?? null;
     }
 
-    public async Task<Employee?> UpdateAsync(string id, EmployeeUpdateDto employeeUpdateDto)
+    public async Task<Employee?> UpdateAsync(int id, string baseUrl, IFormFile? file, EmployeeUpdateDto employeeUpdateDto)
     {
-        var employee = context.Employees.FirstOrDefault(e => e.EmployeeCode == id);
+        var employee = context.Employees.FirstOrDefault(e => e.EmployeeId == id);
         if (employee == null) return null;
         employee.ToEmployeeUpdate(employeeUpdateDto);
+        var user = context.Users.FirstOrDefault(u => u.Id == employee.EmployeeCode);
+        if (user == null) return null;
+        user.Email = employee.Enail;
+        user.NormalizedEmail = employee.Enail.ToUpper();
+        user.PhoneNumber = employee.PhoneNumber;
+        if (file != null)
+        {
+            employee.Avatar = await imageService.CreateUrlAsync(file, baseUrl);
+        }
         await context.SaveChangesAsync();
         return employee;
     }
-
-    // public async Task<Employee?> DeleteAsync(int id)
-    // {
-    //     throw new NotImplementedException();
-    // }
 }
