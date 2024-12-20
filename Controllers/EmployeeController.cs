@@ -49,6 +49,7 @@ public class EmployeeController(IEmployeeRepository employeeRepository,
     }
 
     [HttpPut("{id:int}")]
+    [Consumes("multipart/form-data")]
     public async Task<IActionResult> Update(int id, IFormFile? file, [FromForm] EmployeeUpdateDto employeeUpdateDto)
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
