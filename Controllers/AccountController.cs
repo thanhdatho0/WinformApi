@@ -159,7 +159,7 @@ public class AccountController(
             var appUser = new AppUser
             {
                 UserName = employeeRegisterDto.Username,
-                Email = employeeRegisterDto.Email,
+                Email = employeeRegisterDto.EmployeeInfo.Email,
                 PhoneNumber = employeeRegisterDto.EmployeeInfo.PersonalInfo.PhoneNumber
             };
 

@@ -20,9 +20,6 @@ public static class EmployeeMappers
                 DateOfBirth = employee.DateOfBirth,
             },
             Email = employee.Enail,
-            Salary = employee.Salary,
-            StartDate = employee.StartDate,
-            ContractUpTo = employee.ContractUpTo,
             Avatar = employee.Avatar,
         };
     }
@@ -37,10 +34,6 @@ public static class EmployeeMappers
             PhoneNumber = employeeCreateDto.PersonalInfo.PhoneNumber,
             Address = employeeCreateDto.PersonalInfo.Address,
             DateOfBirth = employeeCreateDto.PersonalInfo.DateOfBirth,
-            Salary = employeeCreateDto.Salary,
-            StartDate = employeeCreateDto.StartDate,
-            ContractUpTo = employeeCreateDto.ContractUpTo,
-            ParentPhoneNumber = employeeCreateDto.ParentPhoneNumber,
             Enail = employeeCreateDto.Email,
         };
     }

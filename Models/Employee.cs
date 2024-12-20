@@ -11,14 +11,6 @@ namespace api.Models
         public int EmployeeId { get; set; }
         [DefaultValue("")]
         public string EmployeeCode { get; set; }
-        [Column(TypeName = "decimal(18,2)")]
-        public decimal Salary { get; set; }
-        public DateOnly StartDate { get; set; }
-        public int ContractUpTo { get; set; }
-        [Length(10, 11, ErrorMessage = "Phone number must be 10 or 11 numbers long.")]
-        [Column(TypeName = "varchar(11)")]
-        public string? ParentPhoneNumber { get; set; }
-
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public required string Enail { get; set; }
         public string? Avatar { get; set; }
