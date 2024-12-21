@@ -5,6 +5,7 @@ namespace api.DTOs.Order;
 
 public class OrderCreateDto
 {
+    public int OrderId { get; set; }
     public int EmployeeId { get; set; }
     public int? CustomerId { get; set; }
     public string? OrderNotice { get; set; }

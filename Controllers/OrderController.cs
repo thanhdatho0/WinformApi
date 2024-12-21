@@ -56,6 +56,7 @@ public class OrderController(IOrderRepository orderRepository,
                 .InventoryId;
             await orderDetailRepository.CreateAsync(orderDetail);
         }
+        orderCreateDto.OrderId = order.OrderId;
         return Ok(orderCreateDto);
     }
 
