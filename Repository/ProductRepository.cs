@@ -22,7 +22,7 @@ public class ProductRepository(ApplicationDbContext context) : IProductRepositor
             .Include(p => p.Inventories)
                 .ThenInclude(pz => pz.Size)
             .AsQueryable();
-        
+
         products = query.IsDelete is not null ? products.Where(p => p.IsDeleted == query.IsDelete) : products.Where(p => p.IsDeleted == false);
 
         // Áp dụng bộ lọc cho TargetCustomerId, CategoryId, và SubcategoryId
@@ -87,6 +87,10 @@ public class ProductRepository(ApplicationDbContext context) : IProductRepositor
             };
         }
 
+        if (!string.IsNullOrWhiteSpace(query.Name))
+        {
+            products = products.Where(s => s.Name.ToLower().Contains(query.Name.ToLower()));
+        }
         // Phân trang
         // var skipNumber = (query.PageNumber - 1) * query.PageSize;
 
@@ -136,7 +140,7 @@ public class ProductRepository(ApplicationDbContext context) : IProductRepositor
 
         if (product == null)
             return null;
-        
+
         product.IsDeleted = !product.IsDeleted;
         await context.SaveChangesAsync();
         return product;
