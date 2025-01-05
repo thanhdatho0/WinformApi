@@ -44,7 +44,8 @@ namespace api.Mappers
         {
             inventory.SizeId = inventoryUpdateDto.SizeId;
             inventory.ColorId = inventoryUpdateDto.ColorId;
-            inventory.Quantity = inventoryUpdateDto.Quantity;
+            inventory.Quantity += inventoryUpdateDto.Quantity;
+            inventory.InStock += inventoryUpdateDto.Quantity;
         }
     }
 }

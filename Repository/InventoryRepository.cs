@@ -28,18 +28,15 @@ public class InventoryRepository(ApplicationDbContext context) : IInventoryRepos
         return inventory;
     }
 
-    // public async Task<Inventory?> UpdateAsync(int id, InventoryUpdateDto inventoryUpdateDto)
-    // {
-    //     var inventory = await context.Inventories.FindAsync();
-    //     if (inventory == null) return null;
-    //     var latestInStock = inventory.InStock;
-    //     var latestQuantity = inventory.Quantity;
-    //     inventory.ToInventoryFromUpdate(inventoryUpdateDto);
-    //     latestInStock += inventoryUpdateDto.Quantity - latestQuantity;
-    //     inventory.InStock = latestInStock;
-    //     await context.SaveChangesAsync();
-    //     return inventory;
-    // }
+    public async Task<Inventory?> UpdateAsync(InventoryUpdateDto inventoryUpdateDto)
+    {
+        var inventory = await context.Inventories.FirstOrDefaultAsync(
+            i => i.ProductId == inventoryUpdateDto.ProductId && i.ColorId == inventoryUpdateDto.ColorId && i.SizeId == inventoryUpdateDto.SizeId);
+        if (inventory == null) return null;
+        inventory.ToInventoryFromUpdate(inventoryUpdateDto);
+        await context.SaveChangesAsync();
+        return inventory;
+    }
 
     public async Task<Inventory?> GetByDetailsId(int productId, int colorId, int sizeId)
     {

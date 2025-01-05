@@ -90,5 +90,43 @@ namespace api.Controllers
             return Ok(inventories?.Select(i => i.ToInventoryALLDto()) ?? []);
         }
 
+        [HttpPut]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update([FromBody] InventoryUpdateDto inventoryUpdateDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            if (!await _productRepo.ProductExists(inventoryUpdateDto.ProductId))
+                return BadRequest("Product dose not exist!");
+
+            if (!await _sizeRepo.SizeExists(inventoryUpdateDto.SizeId))
+                return BadRequest("Size does not exist");
+
+            if (!await _colorRepo.ColorExists(inventoryUpdateDto.ColorId))
+                return BadRequest("Color does not exist");
+
+            if (!await _inventoryRepo.InventoryExist(inventoryUpdateDto.ProductId,
+                                                    inventoryUpdateDto.ColorId,
+                                                    inventoryUpdateDto.SizeId))
+                return NotFound("Inventory doesn't exist");
+
+            var inventory = await _inventoryRepo.UpdateAsync(inventoryUpdateDto);
+
+            if (inventory == null)
+                return NotFound("Inventory not found");
+
+            var productStock = new ProductUpdateAmountDto
+            {
+                Quantity = inventoryUpdateDto.Quantity,
+                InStock = inventoryUpdateDto.Quantity
+            };
+
+            //Update quantity, stock of product when create inventory
+            var product = await _productRepo.UpdateAmountAsyns(inventoryUpdateDto.ProductId, productStock);
+
+            return Ok("Update Successfully");
+        }
+
     }
 }

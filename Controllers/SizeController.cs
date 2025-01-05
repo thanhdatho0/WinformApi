@@ -67,7 +67,7 @@ namespace api.Controllers
             var size = await sizeRepo.UpdateAsync(id, sizeDto);
 
             if (size == null)
-                return NotFound("Product not found");
+                return NotFound("Size not found");
 
             return Ok(size.ToSizeDto());
         }
