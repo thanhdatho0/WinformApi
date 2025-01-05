@@ -14,7 +14,6 @@ public class ProductCreateDto
     [Range(0.01, double.MaxValue, ErrorMessage = "Price must be a positive value.")]
     public decimal Price { get; set; }
 
-    [MaxLength(500, ErrorMessage = "Description cannot exceed 500 characters.")]
     public string? Description { get; set; }
 
     [Required(ErrorMessage = "Cost is required.")]
